@@ -1,0 +1,28 @@
+{
+    "name": "fashionflow-ai-backend",
+    "version": "2.0.0",
+    "description": "FashionFlow AI - Backend con Agente Residente Autonomo para comercio electronico de ropa deportiva",
+    "main": "src/app.js",
+    "scripts": {
+        "start": "node src/app.js",
+        "dev": "node --watch src/app.js"
+    },
+    "keywords": [
+        "fashionflow",
+        "ai",
+        "agente",
+        "ecommerce",
+        "ropa",
+        "deportiva",
+        "sequelize",
+        "sqlserver"
+    ],
+    "license": "MIT",
+    "dependencies": {
+        "cors": "^2.8.6",
+        "dotenv": "^16.4.7",
+        "express": "^4.21.1",
+        "sequelize": "^6.37.5",
+        "tedious": "^18.6.1"
+    }
+}

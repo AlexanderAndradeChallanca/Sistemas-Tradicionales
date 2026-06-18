@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FashionFlow AI - Catalogo con Agente Autonomo</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ========== ENCABEZADO ========== -->
+    <header class="header">
+        <div class="container header-grid">
+            <div>
+                <h1 class="logo">FashionFlow <span class="logo-ai">AI</span></h1>
+                <p class="slogan">Agente Residente Autonomo de Reabastecimiento Inteligente</p>
+            </div>
+            <div class="agent-status" id="agentStatus">
+                <span class="status-dot active"></span>
+                <span>Agente Activo</span>
+                <span class="badge-notif" id="notifBadge">0</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== CONTENEDOR PRINCIPAL ========== -->
+    <main class="container">
+
+        <!-- ---- BARRA DE HERRAMIENTAS ---- -->
+        <section class="toolbar">
+            <button class="btn btn-primary" onclick="abrirFormulario()">
+                + Nuevo Producto
+            </button>
+            <button class="btn btn-secondary" onclick="cargarProductos(); cargarDecisiones();">
+                &#x21bb; Refrescar
+            </button>
+            <button class="btn btn-agent" onclick="ejecutarEscaneoAgente()">
+                &#x1F916; Escanear Inventario
+            </button>
+            <span class="stock-info" id="stockInfo"></span>
+        </section>
+
+        <!-- ---- CATALOGO DE PRODUCTOS ---- -->
+        <section class="card">
+            <div class="card-header">
+                <h2>Catalogo de Productos</h2>
+            </div>
+            <div class="table-wrapper">
+                <table class="productos-table" id="tablaProductos">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Codigo</th>
+                            <th>Nombre</th>
+                            <th>Categoria</th>
+                            <th>Talla</th>
+                            <th>Stock</th>
+                            <th>P. Venta</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyProductos">
+                        <tr><td colspan="9" class="text-center">Cargando productos...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ---- PANEL DE DECISIONES DE LA IA AUTONOMA ---- -->
+        <section class="card agent-panel" id="agentPanel">
+            <div class="card-header">
+                <h2>&#x1F916; Panel de Decisiones de la IA Autonoma</h2>
+                <span class="panel-badge" id="panelBadge">0 decisiones</span>
+            </div>
+            <div id="agentDecisions" class="agent-timeline">
+                <p class="text-center" style="color:#999;">Esperando decisiones del agente...</p>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ========== MODAL FORMULARIO PRODUCTO ========== -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nuevo Producto</h2>
+                <button class="btn-close" onclick="cerrarFormulario()">&times;</button>
+            </div>
+            <form id="productoForm" class="modal-body">
+                <input type="hidden" id="productoId">
+
+                <div class="form-group">
+                    <label for="nombre">Nombre de la prenda</label>
+                    <input type="text" id="nombre" required placeholder="Ej: Polo Deportivo Pro">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="codigoPrenda">Codigo de prenda</label>
+                        <input type="text" id="codigoPrenda" required placeholder="Ej: POL-NIKE-001">
+                    </div>
+                    <div class="form-group">
+                        <label for="categoria">Categoria</label>
+                        <select id="categoria" required>
+                            <option value="">Seleccione...</option>
+                            <option value="Polos">Polos</option>
+                            <option value="Casacas">Casacas</option>
+                            <option value="Pantalones">Pantalones</option>
+                            <option value="Shorts">Shorts</option>
+                            <option value="Accesorios">Accesorios</option>
+                            <option value="Calzado">Calzado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="talla">Talla</label>
+                        <select id="talla" required>
+                            <option value="">Seleccione...</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                            <option value="UN">UN (Unica)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="imagenUrl">URL de imagen</label>
+                        <input type="url" id="imagenUrl" placeholder="https://ejemplo.com/imagen.jpg">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="stockActual">Stock actual</label>
+                        <input type="number" id="stockActual" min="0" required value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="stockMinimo">Stock minimo</label>
+                        <input type="number" id="stockMinimo" min="0" required value="5">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="precioCompra">Precio de compra (S/)</label>
+                        <input type="number" id="precioCompra" min="0.01" step="0.01" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label for="precioVenta">Precio de venta (S/)</label>
+                        <input type="number" id="precioVenta" min="0.01" step="0.01" required placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
+                    <button type="button" class="btn btn-cancel" onclick="cerrarFormulario()">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== MODAL DETALLE DE DECISION ========== -->
+    <div class="modal-overlay" id="modalDecision">
+        <div class="modal modal-lg">
+            <div class="modal-header">
+                <h2 id="decisionModalTitle">Detalle de Decision del Agente</h2>
+                <button class="btn-close" onclick="cerrarModalDecision()">&times;</button>
+            </div>
+            <div class="modal-body" id="decisionModalBody">
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== TOAST ========== -->
+    <div id="toast" class="toast"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
